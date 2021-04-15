@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -32,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding activityMainBinding;
     private ArrayList<TodoModel> todoModelArrayList = new ArrayList<TodoModel>();
     private ArrayList<TodoModel> completedArraylist = new ArrayList<TodoModel>();
-    Todo_Adapter todo_adapter;
-    Todo_Adapter completed_adapter;
+    private Todo_Adapter todo_adapter;
+    private Todo_Adapter completed_adapter;
     private RequestQueue requestQueue;
 
     private JsonArrayRequest todoRequest;
@@ -42,32 +43,43 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //JetPack View Binding Setup
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = activityMainBinding.getRoot();
         setContentView(view);
-        requestQueue = Volley.newRequestQueue(getApplicationContext());
+        //End of JetPack View Binding Setup
 
+        requestQueue = Volley.newRequestQueue(getApplicationContext());//init volley request
 
+        initAdapter();
+        initData();
+        initView();
+    }
+
+    private void initView() {
+        activityMainBinding.viewAllTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ViewAllActivity.class));
+            }
+        });
+    }
+
+    private void initAdapter() {
         todo_adapter = new Todo_Adapter(MainActivity.this, todoModelArrayList);
         activityMainBinding.todoRecyclerView
                 .setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         activityMainBinding.todoRecyclerView.setAdapter(todo_adapter);
 
+
+
         completed_adapter = new Todo_Adapter(MainActivity.this, completedArraylist);
         activityMainBinding.completedRecyclerView
                 .setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         activityMainBinding.completedRecyclerView.setAdapter(completed_adapter);
-//        activityMainBinding.todoRecyclerView.addItemDecoration(new DividerItemDecoration(activityMainBinding.todoRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
-//Test Data
-//        TodoModel td = new TodoModel();
-//        td.setCompleted("false");
-//        td.setId("1");
-//        td.setTitle("asdasd");
-//        td.setUserId("123");
-//        todoModelArrayList.add(td);
-//        todo_adapter.notifyDataSetChanged();
-        initData();
+
+
     }
 
     private void initData() {
@@ -79,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONArray response) {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    List<TodoModel> tempList = Arrays.asList(mapper.readValue(response.toString(), TodoModel[].class));
+                    List<TodoModel> tempList = Arrays.asList(
+                            mapper.readValue(response.toString(), TodoModel[].class));
                     for (TodoModel todoModel : tempList) {
                         if (todoModel.getCompleted().equals(false)) {
                             todoModelArrayList.add(todoModel);
@@ -104,13 +117,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void updateCompleteList(TodoModel todoModel,int position) {
+    public void updateCompleteList(TodoModel todoModel, int position) {
         completedArraylist.add(todoModel);
         completed_adapter.notifyDataSetChanged();
 
     }
 
-    public void updateTodoList(TodoModel todoModel,int position) {
+    public void updateTodoList(TodoModel todoModel, int position) {
         todoModelArrayList.add(todoModel);
         todo_adapter.notifyDataSetChanged();
 
