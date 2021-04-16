@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/recycler_rl"
     android:layout_height="wrap_content">
 
     <CheckBox
@@ -16,7 +17,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="-5dp"
         android:layout_toRightOf="@id/checkbox_cb"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent"
+        android:textColor="#a6a6a6"
+        android:inputType="textMultiLine|textNoSuggestions"
+        android:cursorVisible="false"
+        android:clickable="true"
+        android:focusable="false"
+        />
 
     <TextView
         android:id="@+id/user_id_tv"

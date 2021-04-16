@@ -4,9 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.todo.Adapter.Todo_Adapter;
 import com.example.todo.Model.TodoModel;
 import com.example.todo.R;
+import com.example.todo.Util.SnackUtil;
 import com.example.todo.databinding.ActivityMainBinding;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -63,6 +69,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ViewAllActivity.class));
             }
         });
+
+        activityMainBinding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TodoModel todoModel = new TodoModel();
+                todoModel.setCompleted(false);
+                todoModel.setId("123");
+                todoModel.setTitle("Do wht");
+                todoModel.setUserId("321");
+                todoModelArrayList.add(todoModel);
+                todo_adapter.notifyItemInserted(todoModelArrayList.size());
+                activityMainBinding.todoRecyclerView.scrollToPosition(todoModelArrayList.size() - 1);
+            }
+        });
+        activityMainBinding.parentRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyboard(v);
+                todo_adapter.disabled_EDT();
+            }
+        });
     }
 
     private void initAdapter() {
@@ -72,12 +99,10 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.todoRecyclerView.setAdapter(todo_adapter);
 
 
-
         completed_adapter = new Todo_Adapter(MainActivity.this, completedArraylist);
         activityMainBinding.completedRecyclerView
                 .setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         activityMainBinding.completedRecyclerView.setAdapter(completed_adapter);
-
 
 
     }
@@ -128,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
         todo_adapter.notifyDataSetChanged();
 
 
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

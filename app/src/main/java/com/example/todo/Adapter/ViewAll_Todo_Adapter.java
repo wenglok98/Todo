@@ -11,10 +11,12 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.Activity.MainActivity;
 import com.example.todo.Model.TodoModel;
+import com.example.todo.OnLoadMoreListener;
 import com.example.todo.R;
 
 import java.util.ArrayList;
@@ -26,12 +28,46 @@ public class ViewAll_Todo_Adapter extends RecyclerView.Adapter<ViewAll_Todo_Adap
     private Context context;
     private ArrayList<TodoModel> todoModelArrayLists;
     private ArrayList<TodoModel> todoModelArrayLists_filter;
+    private int visibleThreshold = 1;
+    private int lastVisibleItem, totalItemCount;
+    private boolean loading;
+    private OnLoadMoreListener onLoadMoreListener;
 
 
-    public ViewAll_Todo_Adapter(Context ct, ArrayList<TodoModel> todoModelArrayList) {
+    public ViewAll_Todo_Adapter(Context ct, ArrayList<TodoModel> todoModelArrayList, RecyclerView recyclerView) {
         context = ct;
         todoModelArrayLists = todoModelArrayList;
         todoModelArrayLists_filter = new ArrayList<>(todoModelArrayLists);
+
+//        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
+                .getLayoutManager();
+        recyclerView
+                .addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView,
+                                           int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+
+                        totalItemCount = linearLayoutManager.getItemCount();
+                        lastVisibleItem = linearLayoutManager
+                                .findLastVisibleItemPosition();
+                        if (totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                            // End has been reached
+                            // Do something
+                            if (onLoadMoreListener != null) {
+                                onLoadMoreListener.onLoadMore();
+                            }
+
+                        }
+                    }
+                });
+
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
     }
 
     @NonNull
@@ -92,7 +128,7 @@ public class ViewAll_Todo_Adapter extends RecyclerView.Adapter<ViewAll_Todo_Adap
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
             todoModelArrayLists.clear();
-            todoModelArrayLists.addAll((List)results.values);
+            todoModelArrayLists.addAll((List) results.values);
             notifyDataSetChanged();
         }
     };
@@ -109,6 +145,12 @@ public class ViewAll_Todo_Adapter extends RecyclerView.Adapter<ViewAll_Todo_Adap
             todo_title_Edt = itemView.findViewById(R.id.todo_Edt);
             todo_user_id_Tv = itemView.findViewById(R.id.user_id_tv);
         }
+    }
+
+    public void updateFilterList(ArrayList<TodoModel> todoModels) {
+        todoModelArrayLists_filter.clear();
+        todoModelArrayLists_filter = new ArrayList<>(todoModels);
+
     }
 
 

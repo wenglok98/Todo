@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activity.ViewAllActivity">
+
     <include
         android:id="@+id/search_layout"
         layout="@layout/search_bar"
@@ -12,9 +13,22 @@
         android:layout_height="45dp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todo_viewall_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/todo_viewall_recyclerView"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/search_layout"/>
+
+        android:layout_below="@id/search_layout"
+        android:layout_marginTop="5dp" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loading_lottie"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:elevation="5dp"
+        android:visibility="gone"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="lf30_editor_3g4c9oqu.json"
+        app:lottie_loop="true" />
 </RelativeLayout>

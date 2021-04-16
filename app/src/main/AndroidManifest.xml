@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Todo">
         <activity android:name=".Activity.ViewAllActivity"></activity>
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name=".Activity.MainActivity"
+            android:windowSoftInputMode="stateAlwaysVisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
