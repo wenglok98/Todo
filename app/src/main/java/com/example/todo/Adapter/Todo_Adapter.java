@@ -113,6 +113,7 @@ public class Todo_Adapter extends RecyclerView.Adapter<Todo_Adapter.MyViewHolder
 
                                     showKeyboard();
                                 } else {
+                                    bottomSheetDialog.dismiss();
                                     SnackUtil.show(context, "Completed Task Not Allowed to Edit !");
                                 }
                             }
