@@ -13,7 +13,8 @@
         android:theme="@style/Theme.Todo">
         <activity android:name=".Activity.ViewAllActivity"></activity>
         <activity android:name=".Activity.MainActivity"
-            android:windowSoftInputMode="stateAlwaysVisible">
+            android:windowSoftInputMode="stateHidden|adjustPan|stateAlwaysVisible"
+       >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

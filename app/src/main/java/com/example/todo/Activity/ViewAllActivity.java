@@ -97,6 +97,13 @@ public class ViewAllActivity extends AppCompatActivity {
                             @Override
                             public void onFilterComplete(int count) {
 
+                                if (todo_adapter.getItemCount() <= 0)
+                                {
+                                    activityViewAllBinding.noResultFoundRl.setVisibility(View.VISIBLE);
+                                }
+                                else
+                                    activityViewAllBinding.noResultFoundRl.setVisibility(View.GONE);
+
 
                             }
                         });
